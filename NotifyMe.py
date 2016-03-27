@@ -1,0 +1,48 @@
+
+#Created By Syed Ahmed - Dang team - Wear hacks TO 2016
+#
+import time
+from yahoo_finance import Share
+from mailjet_rest import Client
+import os
+
+
+API_KEY = '03a06c90a7e8aedb43b63ec8150641ab'
+API_SECRET = '439c5c01dc8c6e421df099e2ef6b1c0a'
+invalid = 'invalid Stock Ticker; YHOO is automatically chosen'
+valid = False
+strCompany = ''
+count = 0
+mailjet = Client(auth=(API_KEY, API_SECRET))
+
+
+strCompany = raw_input("Enter the company Stock Ticker; example: YHOO for Yahoo:      ")
+if strCompany == '':
+    print invalid
+    strCompany = 'YHOO'
+elif len(strCompany) > 5:
+    print invalid
+    strCompany = 'YHOO'
+else:
+    valid = True
+
+
+company = Share(strCompany)
+price = str(company.get_price)
+print company.get_price()
+
+#Send email
+while count < 48:
+    data = {
+        'FromEmail': 'stoks@niotic.com',
+        'FromName': 'Stock Partner',
+        'Subject': 'There has been a change in prices!',
+        'Text-part': 'We do not use text!',
+        'Html-part': '<h3>Here is the stock update for: ' + strCompany +' </h3><br/><H1> Current Price: ' + price + ' </H1>',
+        'Recipients': [{'Email':'dangnitish31@gmail.com'}] # change email
+        }
+    result = mailjet.send.create(data=data)
+    print result.status_code
+    print result.json()
+    count = count + 1
+    time.sleep(60*30)

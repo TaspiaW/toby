@@ -1,0 +1,21 @@
+install following;
+
+Yahoo finance api
+	- pip install yahoo-finance
+MailJet Wrapper
+	pip install mailjet_rest
+
+	Set Environment Variable:
+		in Cmd/Terminal
+	export MJ_APIKEY_PUBLIC='api key public'
+	export MJ_APIKEY_PRIVATE='api key secret'
+
+	example:
+
+	export MJ_APIKEY_PUBLIC='03a06c90a7e8aedb43b63ec8150641ab'
+	export MJ_APIKEY_PRIVATE='439c5c01dc8c6e421df099e2ef6b1c0a'
+
+	Or just use set variables in program
+	
+
+Usage:
