@@ -4,6 +4,7 @@
 import time
 from yahoo_finance import Share
 from mailjet_rest import Client
+from pprint import pprint
 import os
 
 
@@ -26,19 +27,33 @@ elif len(strCompany) > 5:
 else:
     valid = True
 
-
 company = Share(strCompany)
-price = str(company.get_price)
+price = str(company.get_price())
+#historical = str(company.get_historical('2016-03-22', '2016-03-27'))
+historical = company.get_historical('2016-03-22', '2016-03-27')
+historical_string = ""
+
+for item in (historical):
+    for key in item.keys():
+        if (str(key) == "Volume"): historical_string = historical_string + str(key) + str(item[key])+ "<br/>"
+        else: historical_string = historical_string + str(key) + ": $" + str(item[key])+ "<br/>"
+        historical_string  = historical_string+"<br/><br/>"
+
+print(historical_string)
+
 print company.get_price()
 
 #Send email
-while count < 48:
+while count < 49:
+    company.refresh
+    price = str(company.get_price())
+
     data = {
         'FromEmail': 'stoks@niotic.com',
         'FromName': 'Stock Partner',
         'Subject': 'There has been a change in prices!',
         'Text-part': 'We do not use text!',
-        'Html-part': '<h3>Here is the stock update for: ' + strCompany +' </h3><br/><H1> Current Price: ' + price + ' </H1>',
+        'Html-part': '<h3>Here is the stock update for: ' + strCompany +' </h3><br/><H1> Current Price: $' + price + ' </H1> <p> here is some other relevant information </p> <br/> <p> ' + historical_string + '</p> ',
         'Recipients': [{'Email':'dangnitish31@gmail.com'}] # change email
         }
     result = mailjet.send.create(data=data)
